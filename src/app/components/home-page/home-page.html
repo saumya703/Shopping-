@@ -1,0 +1,84 @@
+@if (isLandingPage()) {
+  <section class="hero" aria-labelledby="hero-title">
+    @for (slide of slides; track slide.id; let index = $index) {
+      <div
+        class="hero-image"
+        [class.is-active]="index === currentIndex()"
+        [style.--hero-image]="'url(' + slide.image + ')'"
+        aria-hidden="true"
+      ></div>
+    }
+    @let slide = currentSlide();
+    <div class="hero-content">
+      <span class="hero-eyebrow">{{ slide.eyebrow }}</span>
+      <h1 id="hero-title" aria-live="polite">
+        {{ slide.title }}<br /><em>{{ slide.highlight }}</em>
+      </h1>
+      <p>{{ slide.description }}</p>
+      <a class="hero-button" routerLink="/" fragment="collection">
+        Shop the collection <span aria-hidden="true">→</span>
+      </a>
+      <span class="hero-note">{{ slide.note }}</span>
+    </div>
+    <div class="hero-controls" aria-label="Banner slider controls">
+      <button
+        class="hero-arrow"
+        type="button"
+        aria-label="Previous banner"
+        (click)="showPreviousSlide()"
+      >
+        <span aria-hidden="true">←</span>
+      </button>
+      <div class="hero-pagination" aria-label="Choose a banner">
+        @for (item of slides; track item.id; let index = $index) {
+          <button
+            class="hero-dot"
+            type="button"
+            [class.is-active]="index === currentIndex()"
+            [attr.aria-label]="'Show banner ' + (index + 1) + ': ' + item.highlight"
+            [attr.aria-pressed]="index === currentIndex()"
+            (click)="selectSlide(index)"
+          ></button>
+        }
+      </div>
+      <button class="hero-arrow" type="button" aria-label="Next banner" (click)="showNextSlide()">
+        <span aria-hidden="true">→</span>
+      </button>
+      <span class="hero-index" aria-live="polite"
+        >0{{ currentIndex() + 1 }} <span>/ 0{{ slides.length }}</span></span
+      >
+    </div>
+  </section>
+
+  <section class="values-strip" aria-label="Our values">
+    <div><span class="value-icon">✳</span><span>Thoughtfully crafted</span></div>
+    <div><span class="value-icon">◇</span><span>Made to be treasured</span></div>
+    <div><span class="value-icon">∞</span><span>Considered materials</span></div>
+  </section>
+
+  <app-featured-products />
+  @defer (on idle) {
+    <app-shop-by-category />
+  }
+  @defer (on idle) {
+    <app-trending-products />
+  }
+  @defer (on idle) {
+    <app-shop-with-confidence />
+  }
+  @defer (on idle) {
+    <app-newsletter-signup />
+  }
+}
+
+<app-product-list [searchTerm]="searchTerm()" [selectedCategory]="selectedCategory()" />
+
+@if (isLandingPage()) {
+  <app-recently-viewed />
+
+  <section class="closing-note">
+    <span class="eyebrow">The everyday heirloom</span>
+    <p>“The most meaningful pieces are the ones that become part of your story.”</p>
+    <span class="closing-signature">The DIYA Philosophy</span>
+  </section>
+}

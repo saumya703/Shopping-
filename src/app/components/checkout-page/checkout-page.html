@@ -1,0 +1,114 @@
+<section class="checkout-page">
+  <div class="page-heading">
+    <span class="eyebrow">A thoughtful final step</span>
+    <h1>Delivery details</h1>
+    <p>This is a demo checkout. No payment details are requested or processed.</p>
+  </div>
+
+  @if (cart.lines().length > 0) {
+    <div class="checkout-layout">
+      <form class="checkout-form" [formGroup]="form" (ngSubmit)="placeOrder()" novalidate>
+        <h2>Where should we send your DIYA piece?</h2>
+        <div class="form-grid">
+          <label class="form-field full-width">
+            <span>Full name</span>
+            <input autocomplete="name" formControlName="fullName" />
+            @if (form.controls.fullName.touched && form.controls.fullName.invalid) {
+              <small>Please enter your name.</small>
+            }
+          </label>
+
+          <label class="form-field">
+            <span>Email address</span>
+            <input type="email" autocomplete="email" formControlName="email" />
+            @if (form.controls.email.touched && form.controls.email.invalid) {
+              <small>Enter a valid email address.</small>
+            }
+          </label>
+
+          <label class="form-field">
+            <span>Phone number</span>
+            <input type="tel" autocomplete="tel" formControlName="phone" />
+            @if (form.controls.phone.touched && form.controls.phone.invalid) {
+              <small>Enter a phone number with 7–20 characters.</small>
+            }
+          </label>
+
+          <label class="form-field full-width">
+            <span>Shipping address</span>
+            <input autocomplete="street-address" formControlName="address" />
+            @if (form.controls.address.touched && form.controls.address.invalid) {
+              <small>Please enter a complete street address.</small>
+            }
+          </label>
+
+          <label class="form-field">
+            <span>City</span>
+            <input autocomplete="address-level2" formControlName="city" />
+            @if (form.controls.city.touched && form.controls.city.invalid) {
+              <small>Enter your city.</small>
+            }
+          </label>
+
+          <label class="form-field">
+            <span>State / province</span>
+            <input autocomplete="address-level1" formControlName="state" />
+            @if (form.controls.state.touched && form.controls.state.invalid) {
+              <small>Enter your state or province.</small>
+            }
+          </label>
+
+          <label class="form-field">
+            <span>ZIP / postal code</span>
+            <input autocomplete="postal-code" formControlName="postalCode" />
+            @if (form.controls.postalCode.touched && form.controls.postalCode.invalid) {
+              <small>Enter a valid postal code.</small>
+            }
+          </label>
+        </div>
+        <button class="place-order-button" type="submit" [disabled]="form.invalid">
+          Place demo order
+        </button>
+      </form>
+
+      <aside class="checkout-summary" aria-labelledby="checkout-summary-title">
+        <h2 id="checkout-summary-title">Order summary</h2>
+        @for (item of cart.lines(); track item.itemKey) {
+          <div class="summary-item">
+            <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+            <div>
+              <span>{{ item.product.name }}</span>
+              <small>Qty {{ item.quantity }}</small>
+            </div>
+            <strong>{{ item.lineTotal | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+          </div>
+        }
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>{{ cart.subtotal() | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span>
+            @if (cart.shipping() === 0) {
+              Complimentary
+            } @else {
+              {{ cart.shipping() | currency: 'USD' : 'symbol' : '1.0-0' }}
+            }
+          </span>
+        </div>
+        <div class="summary-total">
+          <span>Total</span>
+          <strong>{{ cart.total() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+        </div>
+        <a routerLink="/cart">Return to shopping bag</a>
+      </aside>
+    </div>
+  } @else {
+    <div class="empty-checkout">
+      <h2>Your bag is empty</h2>
+      <p>Add a piece to your bag before starting checkout.</p>
+      <a routerLink="/" fragment="collection">Continue shopping</a>
+    </div>
+  }
+</section>

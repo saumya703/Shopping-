@@ -1,0 +1,66 @@
+<article class="product-card">
+  <div class="product-image-wrap">
+    <a
+      class="image-link"
+      [routerLink]="['/products', product().id]"
+      [attr.aria-label]="'View ' + product().name"
+    >
+      <img
+        [src]="product().imageUrl"
+        [alt]="product().name"
+        loading="lazy"
+        width="640"
+        height="800"
+      />
+    </a>
+    @if (badgeLabel()) {
+      <span class="product-badge">{{ badgeLabel() }}</span>
+    } @else if (product().featured) {
+      <span class="product-badge">Bestseller</span>
+    }
+    <button
+      class="save-button"
+      type="button"
+      [class.saved]="wishlist.contains(product().id)"
+      [attr.aria-pressed]="wishlist.contains(product().id)"
+      [attr.aria-label]="
+        wishlist.contains(product().id) ? 'Remove from wishlist' : 'Add to wishlist'
+      "
+      (click)="wishlist.toggle(product().id)"
+    >
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M20.8 8.6c0 5.1-8.8 10.1-8.8 10.1S3.2 13.7 3.2 8.6a4.4 4.4 0 0 1 8-2.6 4.4 4.4 0 0 1 8 2.6Z"
+        />
+      </svg>
+    </button>
+    @if (showQuickView()) {
+      <button class="quick-view-button" type="button" (click)="quickView.emit(product())">
+        Quick view
+      </button>
+    }
+  </div>
+
+  <div class="product-info">
+    <span class="product-category">{{ product().category }}</span>
+    <a class="product-name" [routerLink]="['/products', product().id]">{{ product().name }}</a>
+    <span class="product-price">{{ product().price | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+    <a class="details-link" [routerLink]="['/products', product().id]">
+      View details <span aria-hidden="true">→</span>
+    </a>
+    @if (requiresOptions() && product().availableQuantity > cart.quantityFor(product().id)) {
+      <a class="add-to-cart-button choose-options-link" [routerLink]="['/products', product().id]">
+        {{ optionsLinkLabel() }}
+      </a>
+    } @else {
+      <button
+        class="add-to-cart-button"
+        type="button"
+        [disabled]="!canAddToCart()"
+        (click)="addToCart()"
+      >
+        {{ addButtonLabel() }}
+      </button>
+    }
+  </div>
+</article>

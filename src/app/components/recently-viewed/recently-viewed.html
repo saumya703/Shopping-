@@ -1,0 +1,11 @@
+@if (recentlyViewed.products().length > 0) {
+  <section class="recent-section" aria-labelledby="recent-title">
+    <span class="eyebrow">A second look</span>
+    <h2 id="recent-title">Recently viewed</h2>
+    <div class="recent-grid">
+      @for (product of recentlyViewed.products(); track product.id) {
+        <app-product-card [product]="product" />
+      }
+    </div>
+  </section>
+}

@@ -1,0 +1,26 @@
+<section class="wishlist-page">
+  <div class="page-heading">
+    <span class="eyebrow">Your personal edit</span>
+    <h1>Saved with love</h1>
+    <p>Your favourite pieces, all in one place.</p>
+  </div>
+
+  @if (products().length > 0) {
+    <div class="product-grid">
+      @for (product of products(); track product.id) {
+        <app-product-card
+          [product]="product"
+          cartActionLabel="Move to cart"
+          (addedToCart)="removeFromWishlistAfterAdd($event)"
+        />
+      }
+    </div>
+  } @else {
+    <div class="empty-wishlist">
+      <span class="heart-mark" aria-hidden="true">♡</span>
+      <h2>A little room for something lovely</h2>
+      <p>Save the pieces you love and they’ll find a home here.</p>
+      <a routerLink="/" fragment="collection">Explore the collection</a>
+    </div>
+  }
+</section>

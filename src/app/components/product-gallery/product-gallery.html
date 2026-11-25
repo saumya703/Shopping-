@@ -1,0 +1,191 @@
+<div class="gallery-layout">
+  <div class="gallery-thumbnails" role="group" aria-label="Product media">
+    @for (media of mediaItems(); track media.src; let index = $index) {
+      <button
+        class="gallery-thumbnail"
+        type="button"
+        [class.is-active]="index === activeIndex()"
+        [attr.aria-label]="thumbnailLabel(media, index)"
+        [attr.aria-pressed]="index === activeIndex()"
+        (click)="selectMedia(index)"
+      >
+        @if (media.kind === 'video') {
+          <img [src]="media.posterUrl" [alt]="product().name" loading="lazy" />
+          <span class="thumbnail-play" aria-hidden="true">▶</span>
+          @if (media.is360) {
+            <span class="thumbnail-360">360°</span>
+          }
+        } @else {
+          <img [src]="media.src" [alt]="media.alt" loading="lazy" />
+          @if (media.label) {
+            <span class="thumbnail-view-label">{{ media.label }}</span>
+          }
+        }
+      </button>
+    }
+  </div>
+
+  <div class="gallery-stage">
+    @if (activeMedia(); as media) {
+      @if (media.kind === 'image') {
+        <button
+          class="main-image-trigger"
+          type="button"
+          [attr.aria-label]="'Open full-screen view of ' + media.alt"
+          (click)="openLightbox()"
+          (pointermove)="onMainImagePointerMove($event)"
+          (pointerleave)="onMainImagePointerLeave()"
+        >
+          @if (!imageError()) {
+            <img
+              [src]="media.src"
+              [alt]="media.alt"
+              [style.transform-origin]="hoverOrigin()"
+              [class.hover-zoom]="hoverZoom()"
+              fetchpriority="high"
+              (error)="onImageError()"
+            />
+          } @else {
+            <span class="media-fallback" role="img" [attr.aria-label]="media.alt">
+              Product image unavailable
+            </span>
+          }
+          <span class="zoom-hint" aria-hidden="true">＋</span>
+        </button>
+      } @else {
+        <div class="video-player-wrap">
+          @if (!videoError()) {
+            <video
+              #galleryVideo
+              [src]="media.src"
+              [poster]="media.posterUrl"
+              controls
+              playsinline
+              preload="metadata"
+              [muted]="videoMuted()"
+              (error)="onVideoError()"
+            ></video>
+            <div class="video-extra-controls">
+              <button type="button" (click)="toggleVideoMute()">
+                {{ videoMuted() ? 'Unmute' : 'Mute' }}
+              </button>
+              <button type="button" (click)="enterVideoFullscreen()">Fullscreen</button>
+            </div>
+            @if (media.is360) {
+              <span class="video-360-label">360° demonstration</span>
+            }
+          } @else {
+            <span class="media-fallback" role="status">Product video unavailable</span>
+          }
+          @if (mediaError()) {
+            <p class="media-error" role="status">{{ mediaError() }}</p>
+          }
+        </div>
+      }
+    }
+
+    @if (mediaItems().length > 1) {
+      <button
+        class="gallery-arrow gallery-previous"
+        type="button"
+        aria-label="Previous product image"
+        (click)="previousMedia()"
+      >
+        ‹
+      </button>
+      <button
+        class="gallery-arrow gallery-next"
+        type="button"
+        aria-label="Next product image"
+        (click)="nextMedia()"
+      >
+        ›
+      </button>
+    }
+  </div>
+</div>
+
+@if (lightboxOpen() && activeMedia(); as media) {
+  @if (media.kind === 'image') {
+    <div class="lightbox-backdrop" role="presentation" (click)="closeLightbox()">
+      <section
+        class="lightbox-dialog"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Full-screen product image viewer"
+        (click)="$event.stopPropagation()"
+      >
+        <button
+          class="lightbox-close"
+          type="button"
+          aria-label="Close image viewer"
+          (click)="closeLightbox()"
+        >
+          ×
+        </button>
+        @if (imageIndices().length > 1) {
+          <button
+            class="lightbox-arrow lightbox-previous"
+            type="button"
+            aria-label="Previous product image"
+            (click)="moveLightboxImage(-1)"
+          >
+            ‹
+          </button>
+        }
+        <div
+          #lightboxFrame
+          class="lightbox-image-frame"
+          (pointerdown)="onLightboxPointerDown($event)"
+          (pointermove)="onLightboxPointerMove($event)"
+          (pointerup)="onLightboxPointerUp($event)"
+          (pointercancel)="onLightboxPointerUp($event)"
+        >
+          @if (!imageError()) {
+            <img
+              [src]="media.src"
+              [alt]="media.alt"
+              [style.transform]="lightboxTransform()"
+              draggable="false"
+              (error)="onImageError()"
+            />
+          } @else {
+            <span class="media-fallback" role="img" [attr.aria-label]="media.alt">
+              Product image unavailable
+            </span>
+          }
+        </div>
+        @if (imageIndices().length > 1) {
+          <button
+            class="lightbox-arrow lightbox-next"
+            type="button"
+            aria-label="Next product image"
+            (click)="moveLightboxImage(1)"
+          >
+            ›
+          </button>
+        }
+        <div class="lightbox-controls" aria-label="Image zoom controls">
+          <button
+            type="button"
+            aria-label="Zoom out"
+            [disabled]="zoomScale() <= 1"
+            (click)="zoomOut()"
+          >
+            −
+          </button>
+          <span aria-live="polite">{{ (zoomScale() * 100).toFixed(0) }}%</span>
+          <button
+            type="button"
+            aria-label="Zoom in"
+            [disabled]="zoomScale() >= 3"
+            (click)="zoomIn()"
+          >
+            +
+          </button>
+          <button type="button" class="reset-zoom" (click)="resetZoom()">Reset</button>
+        </div>
+      </section>
+    </div>
+  }
+}

@@ -1,0 +1,265 @@
+.reviews-section {
+  padding: 4.5rem 5.5vw;
+  border-top: 1px solid var(--line);
+}
+
+.reviews-heading {
+  max-width: 1260px;
+  margin: 0 auto 0.6rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.eyebrow {
+  color: var(--gold-dark);
+  font-size: 0.63rem;
+  letter-spacing: 0.17em;
+  text-transform: uppercase;
+}
+
+.reviews-heading h2 {
+  margin: 0.6rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 3.2vw, 2.7rem);
+  font-weight: 400;
+}
+
+.rating-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.rating-summary strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.rating-stars {
+  color: var(--gold-dark);
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.no-rating {
+  font-size: 0.72rem;
+}
+
+.review-demo-note {
+  max-width: 1260px;
+  margin: 0 auto 1.7rem;
+  color: var(--muted);
+  font-size: 0.65rem;
+}
+
+.reviews-content {
+  max-width: 1260px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+  gap: clamp(2rem, 5vw, 4.5rem);
+  align-items: start;
+}
+
+.review-list {
+  min-width: 0;
+}
+
+.no-reviews {
+  min-height: 220px;
+  display: grid;
+  justify-items: start;
+  align-content: center;
+}
+
+.no-reviews-mark {
+  color: var(--gold-dark);
+  font-size: 1.5rem;
+}
+
+.no-reviews p {
+  margin: 0.55rem 0 0.15rem;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+}
+
+.no-reviews > span:last-child {
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.review-card {
+  padding: 1.4rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.review-card:first-child {
+  padding-top: 0.5rem;
+}
+
+.review-card-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: 0.67rem;
+}
+
+.review-card-heading time {
+  color: var(--muted);
+}
+
+.review-card h3 {
+  margin: 0.65rem 0 0.15rem;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 400;
+}
+
+.review-author {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.65rem;
+}
+
+.review-body {
+  margin: 0.8rem 0 0;
+  color: #5f5b54;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.review-photos {
+  margin-top: 0.9rem;
+  display: flex;
+  gap: 0.6rem;
+}
+
+.review-photos img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+}
+
+.review-form-card {
+  padding: 1.35rem;
+  border: 1px solid var(--line);
+  background: #fbfaf7;
+}
+
+.review-form-card h3 {
+  margin: 0 0 1rem;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+.rating-breakdown {
+  margin-bottom: 1.25rem;
+}
+
+.rating-breakdown-row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) 22px;
+  gap: 0.5rem;
+  align-items: center;
+  margin: 0.35rem 0;
+  color: var(--muted);
+  font-size: 0.63rem;
+}
+
+.rating-bar {
+  height: 5px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.rating-bar span {
+  height: 100%;
+  display: block;
+  background: var(--gold);
+}
+
+.review-form-card form,
+.review-form-card label {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.review-form-card form {
+  gap: 0.85rem;
+}
+
+.review-form-card label > span {
+  font-size: 0.68rem;
+}
+
+.review-form-card input,
+.review-form-card select,
+.review-form-card textarea {
+  width: 100%;
+  min-height: 2.6rem;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.75rem;
+}
+
+.review-form-card textarea {
+  resize: vertical;
+}
+
+.review-form-card small {
+  color: #a64c4c;
+  font-size: 0.63rem;
+}
+
+.review-form-card form > button {
+  min-height: 2.7rem;
+  border: 0;
+  background: var(--ink);
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.67rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.review-form-card form > button:hover {
+  background: var(--gold-dark);
+}
+
+.form-feedback {
+  margin: 0;
+  color: #52714c;
+  font-size: 0.65rem;
+  line-height: 1.5;
+}
+
+.form-feedback.is-error {
+  color: #a64c4c;
+}
+
+@media (max-width: 760px) {
+  .reviews-section {
+    padding: 3.5rem 1rem;
+  }
+
+  .reviews-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .reviews-content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}

@@ -1,0 +1,125 @@
+<section class="account-page">
+  <header class="account-heading">
+    <div>
+      <span class="eyebrow">Your DIYA account</span>
+      <h1>Welcome, {{ currentUser()?.fullName }}</h1>
+      <p>Manage your profile, addresses and demo orders in this browser.</p>
+    </div>
+    <button class="secondary-button" type="button" (click)="logout()">Sign out</button>
+  </header>
+
+  @if (message()) {
+    <p class="notice success" role="status">{{ message() }}</p>
+  }
+  @if (error()) {
+    <p class="notice error" role="alert">{{ error() }}</p>
+  }
+
+  <nav class="account-nav" aria-label="Account sections">
+    <a href="#profile">Profile</a>
+    <a href="#orders">My orders ({{ orders().length }})</a>
+    <a href="#addresses">My addresses ({{ addresses().length }})</a>
+    <a routerLink="/wishlist">My wishlist</a>
+    <a href="#password">Change password demo</a>
+    @if (auth.isAdmin()) {
+      <a routerLink="/admin">Admin panel</a>
+    }
+  </nav>
+
+  <div class="account-grid">
+    <section class="account-panel" id="profile">
+      <h2>Customer profile</h2>
+      <p class="muted">Profile details are stored locally for this demonstration.</p>
+      <form [formGroup]="profileForm" (ngSubmit)="saveProfile()" novalidate>
+        <label>
+          Full name
+          <input autocomplete="name" formControlName="fullName" />
+          @if (profileForm.controls.fullName.touched && profileForm.controls.fullName.invalid) {
+            <small>Enter at least 2 characters.</small>
+          }
+        </label>
+        <label>
+          Email
+          <input type="email" [value]="currentUser()?.email ?? ''" disabled />
+        </label>
+        <label>
+          Phone
+          <input type="tel" autocomplete="tel" formControlName="phone" />
+        </label>
+        <button class="primary-button" type="submit">Save profile</button>
+      </form>
+    </section>
+
+    <section class="account-panel" id="orders">
+      <div class="section-title">
+        <h2>My orders</h2>
+        <span>{{ orders().length }} orders</span>
+      </div>
+      @if (orders().length > 0) {
+        <div class="order-list">
+          @for (order of orders(); track order.id) {
+            <article class="order-row">
+              <div>
+                <strong>{{ order.id }}</strong>
+                <span>{{ order.createdAt | date: 'mediumDate' }} · {{ order.status }}</span>
+              </div>
+              <strong>{{ order.total | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+              <a [routerLink]="['/account/orders', order.id]">Order details & tracking</a>
+            </article>
+          }
+        </div>
+      } @else {
+        <p class="muted">Your demo orders will appear here after checkout.</p>
+        <a class="inline-link" routerLink="/" fragment="collection">Explore the collection</a>
+      }
+    </section>
+
+    <section class="account-panel" id="addresses">
+      <h2>My addresses</h2>
+      @if (addresses().length > 0) {
+        <div class="address-list">
+          @for (address of addresses(); track address.id) {
+            <article class="address-card">
+              <div>
+                <strong>{{ address.label }} @if (address.isDefault) { · Default }</strong>
+                <span>{{ address.fullName }} · {{ address.phone }}</span>
+                <span>{{ address.street }}, {{ address.city }}, {{ address.state }} {{ address.postalCode }}</span>
+              </div>
+              <button class="text-button" type="button" (click)="removeAddress(address.id)">Remove</button>
+            </article>
+          }
+        </div>
+      } @else {
+        <p class="muted">Save an address for your demo account.</p>
+      }
+      <form class="address-form" [formGroup]="addressForm" (ngSubmit)="saveAddress()" novalidate>
+        <h3>Add address</h3>
+        <div class="form-grid">
+          <label>Label<input formControlName="label" /></label>
+          <label>Full name<input autocomplete="name" formControlName="fullName" /></label>
+          <label>Phone<input type="tel" autocomplete="tel" formControlName="phone" /></label>
+          <label class="wide">Street address<input autocomplete="street-address" formControlName="street" /></label>
+          <label>City<input autocomplete="address-level2" formControlName="city" /></label>
+          <label>State<input autocomplete="address-level1" formControlName="state" /></label>
+          <label>ZIP / postal code<input autocomplete="postal-code" formControlName="postalCode" /></label>
+        </div>
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="isDefault" />
+          Make this my default address
+        </label>
+        <button class="primary-button" type="submit">Save address</button>
+      </form>
+    </section>
+
+    <section class="account-panel" id="password">
+      <h2>Change password</h2>
+      <p class="muted">Demo only: passwords are never saved, verified or changed.</p>
+      <form [formGroup]="passwordForm" (ngSubmit)="changePasswordDemo()" novalidate>
+        <label>Current password<input type="password" autocomplete="current-password" formControlName="currentPassword" /></label>
+        <label>New password<input type="password" autocomplete="new-password" formControlName="newPassword" /></label>
+        <label>Confirm new password<input type="password" autocomplete="new-password" formControlName="confirmPassword" /></label>
+        <button class="secondary-button" type="submit">Run demo password flow</button>
+      </form>
+    </section>
+  </div>
+</section>

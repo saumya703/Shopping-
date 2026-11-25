@@ -1,0 +1,95 @@
+:root {
+  --gold: #c6a15b;
+  --gold-dark: #94723d;
+  --ink: #25231f;
+  --muted: #716d65;
+  --paper: #fffdfa;
+  --cream: #f6f1e7;
+  --line: #e7e0d4;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'DM Sans', Arial, sans-serif;
+
+  color: var(--ink);
+  background: var(--paper);
+  font-family: var(--font-body);
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  margin: 0;
+  background: var(--paper);
+  line-height: 1.5;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  color: inherit;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline-color: var(--gold-dark);
+}
+
+a {
+  color: inherit;
+  transition: color 160ms ease;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.eyebrow::before {
+  width: 1.1rem;
+  height: 1px;
+  background: var(--gold);
+  content: '';
+}
+
+.site-header {
+  background: rgb(255 253 250 / 94%);
+  backdrop-filter: blur(12px);
+}
+
+.site-header .nav-more-menu {
+  box-shadow: 0 12px 28px rgb(34 34 34 / 12%);
+}
+
+.site-header .nav-more-menu .nav-link:hover {
+  background: var(--cream);
+}
+
+::selection {
+  color: #fff;
+  background: var(--gold);
+}

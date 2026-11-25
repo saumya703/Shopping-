@@ -1,0 +1,37 @@
+@if (order(); as placedOrder) {
+  <section class="confirmation-page">
+    <span class="confirmation-mark" aria-hidden="true">✓</span>
+    <span class="eyebrow">Demo order confirmed</span>
+    <h1>Thank you, {{ placedOrder.customer.fullName }}.</h1>
+    <p class="confirmation-copy">
+      Your demonstration order is saved in this browser. No payment was collected.
+    </p>
+    <div class="order-card">
+      <div class="order-card-heading">
+        <span>Order reference</span>
+        <strong>{{ placedOrder.id }}</strong>
+      </div>
+      <span class="order-date">{{ placedOrder.createdAt | date: 'longDate' }}</span>
+      @for (item of placedOrder.items; track item.itemKey || item.productId) {
+        <div class="order-item">
+          <span>{{ item.product.name }} × {{ item.quantity }}</span>
+          <span>{{ item.lineTotal | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+        </div>
+      }
+      <div class="order-total">
+        <span>Demo total</span>
+        <strong>{{ placedOrder.total | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+      </div>
+    </div>
+    <a class="return-link" routerLink="/" fragment="collection">Continue exploring</a>
+  </section>
+} @else {
+  <section class="confirmation-page">
+    <span class="eyebrow">No recent order</span>
+    <h1>Nothing to confirm just yet.</h1>
+    <p class="confirmation-copy">
+      Place a demo order from your shopping bag to see its confirmation.
+    </p>
+    <a class="return-link" routerLink="/cart">Return to your shopping bag</a>
+  </section>
+}

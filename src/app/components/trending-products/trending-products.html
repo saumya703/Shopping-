@@ -1,0 +1,79 @@
+<section class="trending-section" aria-labelledby="trending-title">
+  <div class="trending-heading">
+    <div>
+      <span class="eyebrow">The pieces everyone is talking about</span>
+      <h2 id="trending-title">TRENDING NOW</h2>
+    </div>
+    <a class="view-all-link" routerLink="/" fragment="collection">
+      Explore all pieces <span aria-hidden="true">→</span>
+    </a>
+  </div>
+
+  @if (products().length) {
+    <div class="trending-grid">
+      @for (product of products(); track product.id) {
+        <app-product-card
+          [product]="product"
+          badgeLabel="Trending"
+          [showQuickView]="true"
+          (quickView)="openQuickView($event)"
+        />
+      }
+    </div>
+  } @else {
+    <p class="trending-empty">New pieces are coming soon. Please explore the full collection.</p>
+  }
+</section>
+
+@if (quickViewProduct(); as product) {
+  <div class="quick-view-backdrop" (click)="closeQuickView()" (keydown.escape)="closeQuickView()">
+    <section
+      class="quick-view-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="quick-view-title"
+      (click)="$event.stopPropagation()"
+    >
+      <button
+        class="quick-view-close"
+        type="button"
+        aria-label="Close quick view"
+        (click)="closeQuickView()"
+      >
+        ×
+      </button>
+      <div class="quick-view-image">
+        <img [src]="product.imageUrl" [alt]="product.name" />
+      </div>
+      <div class="quick-view-copy">
+        <span class="eyebrow">{{ product.category }}</span>
+        <h2 id="quick-view-title">{{ product.name }}</h2>
+        <p class="quick-view-price">{{ product.price | currency: 'USD' : 'symbol' : '1.0-0' }}</p>
+        <p class="quick-view-description">{{ product.description }}</p>
+        <p class="quick-view-material">{{ product.material }}</p>
+        <p class="quick-view-stock">
+          {{
+            product.availableQuantity > 0
+              ? 'In stock · ' + product.availableQuantity + ' available'
+              : 'Sold out'
+          }}
+        </p>
+        <button
+          class="quick-view-add"
+          type="button"
+          [disabled]="!canQuickAdd(product)"
+          (click)="addQuickViewProduct(product)"
+        >
+          {{ quickAddLabel(product) }}
+        </button>
+        <a
+          class="quick-view-details"
+          [routerLink]="['/products', product.id]"
+          (click)="closeQuickView()"
+        >
+          View full details <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </section>
+  </div>
+}

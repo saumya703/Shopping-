@@ -1,0 +1,84 @@
+<section class="collection-section" id="collection" aria-labelledby="collection-title">
+  <div class="section-heading">
+    <span class="eyebrow">The DIYA edit</span>
+    <h2 id="collection-title">
+      @if (searchTerm().trim()) {
+        Results for “{{ searchTerm().trim() }}”
+      } @else if (selectedCategory() !== 'All') {
+        {{ selectedCategory() }}
+      } @else {
+        Pieces to treasure, always
+      }
+    </h2>
+    <p>
+      @if (searchTerm().trim()) {
+        Jewellery matching your search.
+      } @else if (selectedCategory() !== 'All') {
+        Explore our {{ selectedCategory().toLocaleLowerCase() }} collection.
+      } @else {
+        Considered details. Enduring beauty. Made for the moments that matter.
+      }
+    </p>
+  </div>
+
+  <div class="collection-toolbar">
+    <div class="category-filters" aria-label="Filter by jewellery category">
+      <a
+        routerLink="/"
+        [queryParams]="{ category: null, q: null }"
+        fragment="collection"
+        [class.selected]="selectedCategory() === 'All'"
+      >All pieces</a>
+      @for (category of categories(); track category) {
+        <a
+          routerLink="/"
+          [queryParams]="{ category: category, q: null }"
+          fragment="collection"
+          [class.selected]="selectedCategory() === category"
+        >{{ category }}</a>
+      }
+    </div>
+    <span class="result-count">
+      {{ products().length }} {{ products().length === 1 ? 'piece' : 'pieces' }}
+    </span>
+  </div>
+
+  <div class="catalogue-options">
+    <label class="catalogue-select">
+      <span>Price</span>
+      <select [value]="maxPrice() ?? ''" (change)="onPriceChange($event)">
+        <option value="">Any price</option>
+        <option value="500">Up to $500</option>
+        <option value="750">Up to $750</option>
+        <option value="1000">Up to $1,000</option>
+      </select>
+    </label>
+    <label class="catalogue-select">
+      <span>Sort by</span>
+      <select [value]="sortOrder()" (change)="onSortChange($event)">
+        <option value="recommended">Recommended</option>
+        <option value="price-asc">Price: low to high</option>
+        <option value="price-desc">Price: high to low</option>
+      </select>
+    </label>
+    <label class="availability-filter">
+      <input type="checkbox" [checked]="inStockOnly()" (change)="onAvailabilityChange($event)" />
+      <span>In stock only</span>
+    </label>
+  </div>
+
+  @if (products().length > 0) {
+    <div class="product-grid">
+      @for (product of products(); track product.id) {
+        <app-product-card [product]="product" />
+      }
+    </div>
+  } @else {
+    <div class="empty-results">
+      <span class="empty-mark">O</span>
+      <h3>No pieces found</h3>
+      <p>Try a different search or explore the full collection.</p>
+      <a routerLink="/" [queryParams]="{ category: null, q: null }" fragment="collection">View all pieces</a>
+    </div>
+  }
+</section>

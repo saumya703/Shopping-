@@ -1,0 +1,116 @@
+<section class="reviews-section" aria-labelledby="reviews-title">
+  <div class="reviews-heading">
+    <div>
+      <span class="eyebrow">From our community</span>
+      <h2 id="reviews-title">Customer reviews</h2>
+    </div>
+    <div class="rating-summary" aria-live="polite">
+      @if (averageRating() !== null && reviewCount() > 0) {
+        <span class="rating-stars" [attr.aria-label]="starLabel(averageRating()!)">
+          {{ starCharacters(averageRating()!) }}
+        </span>
+        <strong>{{ averageRating() | number: '1.1-1' }}</strong>
+        <span>{{ reviewCount() }} {{ reviewCount() === 1 ? 'review' : 'reviews' }}</span>
+      } @else {
+        <span class="no-rating">No ratings yet</span>
+      }
+    </div>
+  </div>
+
+  <p class="review-demo-note">
+    Reviews submitted here are stored locally in this browser demo only; they are not published or verified.
+  </p>
+
+  <div class="reviews-content">
+    <div class="review-list">
+      @if (reviews().length > 0) {
+        @for (review of reviews(); track review.id) {
+          <article class="review-card">
+            <div class="review-card-heading">
+              <span class="rating-stars" [attr.aria-label]="starLabel(review.rating)">
+                {{ starCharacters(review.rating) }}
+              </span>
+              <time [attr.datetime]="review.createdAt">{{ review.createdAt | date: 'mediumDate' }}</time>
+            </div>
+            <h3>{{ review.title }}</h3>
+            <p class="review-author">By {{ review.displayName }} · local demo review</p>
+            <p class="review-body">{{ review.body }}</p>
+            @if (review.photoUrls?.length) {
+              <div class="review-photos">
+                @for (photoUrl of review.photoUrls; track photoUrl) {
+                  <img [src]="photoUrl" alt="Photo attached to a customer review" loading="lazy" />
+                }
+              </div>
+            }
+          </article>
+        }
+      } @else {
+        <div class="no-reviews">
+          <span class="no-reviews-mark" aria-hidden="true">☆</span>
+          <p>There are no customer reviews for this piece yet.</p>
+          <span>Be the first to share your experience.</span>
+        </div>
+      }
+    </div>
+
+    <aside class="review-form-card" aria-labelledby="review-form-title">
+      <h3 id="review-form-title">Write a review</h3>
+      @if (reviews().length > 0) {
+        <div class="rating-breakdown" aria-label="Rating breakdown">
+          @for (entry of breakdown(); track entry.rating) {
+            <div class="rating-breakdown-row">
+              <span>{{ entry.rating }} star</span>
+              <span class="rating-bar" aria-hidden="true">
+                <span [style.width]="barWidth(entry.count)"></span>
+              </span>
+              <span>{{ entry.count }}</span>
+            </div>
+          }
+        </div>
+      }
+
+      <form [formGroup]="reviewForm" (ngSubmit)="submitReview()" novalidate>
+        <label>
+          <span>Your name</span>
+          <input formControlName="displayName" autocomplete="name" />
+          @if (reviewForm.controls.displayName.touched && reviewForm.controls.displayName.invalid) {
+            <small>Enter at least 2 characters.</small>
+          }
+        </label>
+        <label>
+          <span>Your rating</span>
+          <select formControlName="rating">
+            <option [ngValue]="0" disabled>Select a rating</option>
+            @for (rating of [5, 4, 3, 2, 1]; track rating) {
+              <option [ngValue]="rating">{{ rating }} {{ rating === 1 ? 'star' : 'stars' }}</option>
+            }
+          </select>
+          @if (reviewForm.controls.rating.touched && reviewForm.controls.rating.invalid) {
+            <small>Please choose a rating from 1 to 5.</small>
+          }
+        </label>
+        <label>
+          <span>Review title</span>
+          <input formControlName="title" />
+          @if (reviewForm.controls.title.touched && reviewForm.controls.title.invalid) {
+            <small>Enter a title with at least 3 characters.</small>
+          }
+        </label>
+        <label>
+          <span>Your review</span>
+          <textarea formControlName="body" rows="4"></textarea>
+          @if (reviewForm.controls.body.touched && reviewForm.controls.body.invalid) {
+            <small>Enter at least 10 characters.</small>
+          }
+        </label>
+        @if (submissionError()) {
+          <p class="form-feedback is-error" role="alert">{{ submissionError() }}</p>
+        }
+        @if (confirmation()) {
+          <p class="form-feedback" role="status">{{ confirmation() }}</p>
+        }
+        <button type="submit">Submit review</button>
+      </form>
+    </aside>
+  </div>
+</section>

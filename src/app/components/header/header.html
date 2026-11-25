@@ -1,0 +1,150 @@
+<div class="announcement">
+  <span>Complimentary shipping on all orders over $250</span>
+</div>
+
+<header class="site-header">
+  <div class="header-main">
+    <a class="brand" routerLink="/" aria-label="DIYA Jewellery home" (click)="closeMenu()">
+      <span class="brand-name">DIYA</span>
+      <span class="brand-divider" aria-hidden="true"></span>
+      <span class="brand-descriptor">Fine Jewellery</span>
+    </a>
+
+    <nav
+      class="main-nav"
+      id="primary-navigation"
+      aria-label="Main navigation"
+      [class.is-open]="menuOpen()"
+    >
+      <a
+        class="nav-link"
+        routerLink="/"
+        [queryParams]="{ category: null, q: null }"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMenu()"
+      >Home</a>
+      @for (category of primaryCategories(); track category) {
+        <a
+          class="nav-link"
+          routerLink="/"
+          [queryParams]="{ category: category, q: null }"
+          fragment="collection"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeMenu()"
+        >{{ category }}</a>
+      }
+      <a
+        class="nav-link"
+        routerLink="/"
+        [queryParams]="{ category: null, q: null }"
+        fragment="collection"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        (click)="closeMenu()"
+      >Collections</a>
+      @if (additionalCategories().length > 0) {
+        <details class="nav-more" #moreMenu>
+          <summary class="nav-link" aria-label="More jewellery categories">More</summary>
+          <div class="nav-more-menu">
+            @for (category of additionalCategories(); track category) {
+              <a
+                class="nav-link"
+                routerLink="/"
+                [queryParams]="{ category: category, q: null }"
+                fragment="collection"
+                (click)="closeMoreMenu(moreMenu)"
+              >{{ category }}</a>
+            }
+          </div>
+        </details>
+      }
+      <a class="nav-link" routerLink="/assistant" routerLinkActive="active" (click)="closeMenu()">Jewellery assistant</a>
+    </nav>
+
+    <div class="header-actions">
+      <a
+        class="icon-button account-link"
+        [routerLink]="auth.currentUser() ? '/account' : '/login'"
+        [attr.aria-label]="auth.currentUser() ? 'My account' : 'Sign in'"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="8" r="3.5" />
+          <path d="M5 20a7 7 0 0 1 14 0" />
+        </svg>
+      </a>
+      <button
+        class="icon-button search-toggle"
+        type="button"
+        aria-label="Open product search"
+        [attr.aria-expanded]="searchOpen()"
+        aria-controls="site-search-panel"
+        (click)="toggleSearch()"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="10.8" cy="10.8" r="6.8" />
+          <path d="m16 16 4.5 4.5" />
+        </svg>
+      </button>
+      <a
+        class="icon-button wishlist-link"
+        routerLink="/wishlist"
+        [attr.aria-label]="'View wishlist, ' + wishlist.count() + ' ' + (wishlist.count() === 1 ? 'item' : 'items')"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.8 8.6c0 5.1-8.8 10.1-8.8 10.1S3.2 13.7 3.2 8.6a4.4 4.4 0 0 1 8-2.6 4.4 4.4 0 0 1 8 2.6Z" />
+        </svg>
+        <span class="count-badge" aria-hidden="true">{{ wishlist.count() }}</span>
+      </a>
+      <a
+        class="icon-button cart-link"
+        routerLink="/cart"
+        [attr.aria-label]="'View shopping bag, ' + cart.itemCount() + ' ' + (cart.itemCount() === 1 ? 'item' : 'items')"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M5 8h14l1 13H4L5 8Z" />
+          <path d="M9 9V6a3 3 0 0 1 6 0v3" />
+        </svg>
+        <span class="count-badge" aria-hidden="true">{{ cart.itemCount() }}</span>
+      </a>
+      <button
+        class="icon-button menu-toggle"
+        type="button"
+        [attr.aria-label]="menuOpen() ? 'Close navigation menu' : 'Open navigation menu'"
+        [attr.aria-expanded]="menuOpen()"
+        aria-controls="primary-navigation"
+        (click)="toggleMenu()"
+      >
+        @if (menuOpen()) {
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m6 6 12 12M18 6 6 18" />
+          </svg>
+        } @else {
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M3 7h18M3 12h18M3 17h18" />
+          </svg>
+        }
+      </button>
+    </div>
+  </div>
+
+  @if (searchOpen()) {
+    <form
+      class="search-panel"
+      id="site-search-panel"
+      role="search"
+      (submit)="submitSearch($event)"
+    >
+      <input
+        id="site-search"
+        type="search"
+        aria-label="Search jewellery"
+        placeholder="Search our collection"
+        [value]="searchText()"
+        (input)="onSearchInput($event)"
+      />
+      <button type="submit">Search</button>
+    </form>
+  }
+</header>

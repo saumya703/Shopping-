@@ -1,0 +1,323 @@
+:host {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 1.25rem;
+  z-index: 40;
+  display: grid;
+  justify-items: end;
+  gap: 0.75rem;
+  font-family: var(--font-body);
+}
+
+.help-launcher {
+  min-height: 3.2rem;
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  border: 0;
+  border-radius: 2rem;
+  background: #222;
+  box-shadow: 0 8px 26px rgb(34 34 34 / 20%);
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+.help-launcher:hover {
+  background: #80632f;
+}
+
+.help-launcher svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+.help-panel {
+  width: min(390px, calc(100vw - 2rem));
+  height: min(570px, calc(100vh - 7rem));
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid #e8e2d7;
+  background: #fff;
+  box-shadow: 0 18px 56px rgb(34 34 34 / 20%);
+}
+
+.help-header {
+  min-height: 66px;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  border-bottom: 1px solid #eeeae2;
+  background: #fbf9f4;
+}
+
+.help-header > div,
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.help-status {
+  width: 0.55rem;
+  height: 0.55rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: #8caa7d;
+}
+
+.help-header h2 {
+  margin: 0;
+  color: #222;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 400;
+}
+
+.mode-label {
+  color: #80632f;
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+}
+
+.mode-label.connected {
+  color: #52714c;
+}
+
+.clear-button,
+.close-button {
+  padding: 0.35rem;
+  border: 0;
+  background: transparent;
+  color: #6e6a62;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.66rem;
+}
+
+.clear-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.close-button {
+  width: 1.8rem;
+  height: 1.8rem;
+  color: #222;
+  font-size: 1.25rem;
+}
+
+.help-messages {
+  min-height: 0;
+  padding: 1rem;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.8rem;
+  overflow-y: auto;
+}
+
+.message {
+  max-width: 92%;
+  padding: 0.75rem;
+  align-self: flex-start;
+  background: #f7f5f0;
+}
+
+.user-message {
+  align-self: flex-end;
+  background: #f2e9d8;
+}
+
+.message-label {
+  color: #80632f;
+  font-size: 0.57rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.message p {
+  margin: 0.25rem 0 0;
+  color: #48443d;
+  font-size: 0.75rem;
+  line-height: 1.55;
+}
+
+.recommendations {
+  margin-top: 0.55rem;
+  display: grid;
+  gap: 0.4rem;
+}
+
+.recommendation {
+  min-width: 0;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  background: #fff;
+  color: #333;
+  text-decoration: none;
+}
+
+.recommendation img {
+  width: 2.6rem;
+  height: 2.6rem;
+  flex: 0 0 auto;
+  object-fit: cover;
+}
+
+.recommendation-info {
+  min-width: 0;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.recommendation-info strong {
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: 0.76rem;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.recommendation-info > span {
+  color: #77736c;
+  font-size: 0.6rem;
+}
+
+.recommendation-arrow {
+  margin-left: auto;
+  color: #80632f;
+}
+
+.loading-message {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #77736c;
+  font-size: 0.7rem;
+}
+
+.typing-dots {
+  display: inline-flex;
+  gap: 0.2rem;
+}
+
+.typing-dots i {
+  width: 0.28rem;
+  height: 0.28rem;
+  border-radius: 50%;
+  background: #c6a15b;
+  animation: pulse 900ms ease-in-out infinite alternate;
+}
+
+.typing-dots i:nth-child(2) {
+  animation-delay: 180ms;
+}
+
+.typing-dots i:nth-child(3) {
+  animation-delay: 360ms;
+}
+
+.help-error {
+  margin: 0 1rem 0.6rem;
+  color: #a23832;
+  font-size: 0.7rem;
+}
+
+.question-form {
+  padding: 0.75rem;
+  display: flex;
+  gap: 0.45rem;
+  border-top: 1px solid #eeeae2;
+}
+
+.question-form input {
+  min-width: 0;
+  min-height: 42px;
+  padding: 0.6rem 0.7rem;
+  flex: 1;
+  border: 1px solid #e6e1d8;
+  border-radius: 0;
+  outline-color: #c6a15b;
+  font: inherit;
+  font-size: 0.72rem;
+}
+
+.question-form button {
+  width: 2.65rem;
+  border: 0;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.15rem;
+}
+
+.question-form button:disabled {
+  background: #bdb8ae;
+  cursor: not-allowed;
+}
+
+.help-footer {
+  padding: 0 0.85rem 0.7rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.25rem 0.6rem;
+  color: #77736c;
+  font-size: 0.57rem;
+  line-height: 1.4;
+}
+
+.help-footer a {
+  color: #80632f;
+  text-decoration: none;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@keyframes pulse {
+  to {
+    opacity: 0.35;
+  }
+}
+
+@media (max-width: 480px) {
+  :host {
+    right: 0.75rem;
+    bottom: 0.75rem;
+  }
+
+  .help-panel {
+    height: min(570px, calc(100vh - 6rem));
+    min-height: 320px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typing-dots i {
+    animation: none;
+  }
+}

@@ -1,0 +1,99 @@
+<section class="auth-page">
+  <div class="auth-card">
+    <span class="eyebrow">DIYA Jewellery · Demo account</span>
+
+    @switch (mode) {
+      @case ('login') {
+        <h1>Welcome back</h1>
+        <p>Start a local demo session to view your account.</p>
+      }
+      @case ('signup') {
+        <h1>Create your account</h1>
+        <p>Save your profile and explore the customer account demo.</p>
+      }
+      @case ('forgot') {
+        <h1>Forgot your password?</h1>
+        <p>This demo does not send email or store credentials.</p>
+      }
+      @case ('reset') {
+        <h1>Reset password demo</h1>
+        <p>Try the form flow; no password is saved or changed.</p>
+      }
+    }
+
+    <p class="demo-notice">
+      Frontend-only demonstration. This is not secure authentication; do not enter a real password.
+    </p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      @if (mode === 'signup') {
+        <label>
+          Full name
+          <input autocomplete="name" formControlName="fullName" />
+          @if (form.controls.fullName.touched && form.controls.fullName.invalid) {
+            <small>Enter at least 2 characters.</small>
+          }
+        </label>
+      }
+
+      <label>
+        Email address
+        <input type="email" autocomplete="email" formControlName="email" />
+        @if (form.controls.email.touched && form.controls.email.invalid) {
+          <small>Enter a valid email address.</small>
+        }
+      </label>
+
+      @if (mode === 'login' || mode === 'signup' || mode === 'reset') {
+        <label>
+          {{ mode === 'login' ? 'Demo password' : 'New demo password' }}
+          <input type="password" autocomplete="new-password" formControlName="password" />
+          @if (form.controls.password.touched && form.controls.password.invalid) {
+            <small>Enter at least 8 characters. It will not be stored.</small>
+          }
+        </label>
+      }
+
+      @if (mode === 'signup' || mode === 'reset') {
+        <label>
+          Confirm password
+          <input type="password" autocomplete="new-password" formControlName="confirmPassword" />
+          @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.invalid) {
+            <small>Confirm with at least 8 characters.</small>
+          }
+        </label>
+      }
+
+      @if (error()) {
+        <p class="form-message error" role="alert">{{ error() }}</p>
+      }
+      @if (message()) {
+        <p class="form-message success" role="status">{{ message() }}</p>
+      }
+
+      <button class="primary-button" type="submit">
+        @switch (mode) {
+          @case ('login') { Start demo session }
+          @case ('signup') { Create demo account }
+          @case ('forgot') { Continue }
+          @case ('reset') { Complete demo reset }
+        }
+      </button>
+    </form>
+
+    <nav class="auth-links" aria-label="Account options">
+      @if (mode === 'login') {
+        <a routerLink="/forgot-password">Forgot password?</a>
+        <a routerLink="/signup">Create an account</a>
+        <button type="button" class="text-button" (click)="enterAdminDemo()">Enter admin demo</button>
+      } @else if (mode === 'signup') {
+        <a routerLink="/login">Already have an account? Sign in</a>
+      } @else if (mode === 'forgot') {
+        <a routerLink="/reset-password">Continue to reset demo</a>
+        <a routerLink="/login">Back to sign in</a>
+      } @else {
+        <a routerLink="/login">Back to sign in</a>
+      }
+    </nav>
+  </div>
+</section>

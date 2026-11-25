@@ -1,0 +1,310 @@
+:host {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: block;
+  background: var(--paper);
+}
+
+.announcement {
+  min-height: 28px;
+  display: grid;
+  place-items: center;
+  padding: 0 0.75rem;
+  background: #222;
+  color: #f5f0e5;
+  font-size: 0.6rem;
+  letter-spacing: 0.13em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.site-header {
+  position: relative;
+  border-bottom: 1px solid #eeeae2;
+}
+
+.header-main {
+  width: min(1440px, 100%);
+  min-height: 78px;
+  padding: 0 5.5vw;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: clamp(1rem, 2.2vw, 2rem);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.68rem;
+  color: var(--gold-dark);
+  text-decoration: none;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  letter-spacing: 0.12em;
+  line-height: 1;
+}
+
+.brand-divider {
+  width: 1px;
+  height: 1.6rem;
+  background: var(--gold);
+}
+
+.brand-descriptor {
+  color: #514e48;
+  font-family: var(--font-body);
+  font-size: 0.62rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.main-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.8rem, 1.45vw, 1.45rem);
+}
+
+.nav-link {
+  padding: 0.7rem 0 0.8rem;
+  color: #373530;
+  font-size: 0.65rem;
+  letter-spacing: 0.09em;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--gold-dark);
+}
+
+.nav-more-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: grid;
+  padding: 0.4rem;
+  background: #fff;
+}
+
+.nav-more-menu .nav-link {
+  padding: 0.7rem 0.8rem;
+}
+
+.nav-more {
+  position: relative;
+}
+
+.header-actions {
+  display: flex;
+  justify-self: end;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.icon-button {
+  position: relative;
+  width: 2.45rem;
+  height: 2.45rem;
+  padding: 0.45rem;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: #292824;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.icon-button svg {
+  width: 1.3rem;
+  height: 1.3rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.45;
+}
+
+.icon-button:hover,
+.icon-button:focus-visible {
+  background: #f6f1e7;
+  color: var(--gold-dark);
+}
+
+.icon-button:focus-visible,
+.nav-link:focus-visible,
+.brand:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+.count-badge {
+  position: absolute;
+  top: 0.05rem;
+  right: 0.02rem;
+  min-width: 1rem;
+  height: 1rem;
+  padding: 0 0.2rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--paper);
+  border-radius: 50%;
+  background: var(--gold);
+  color: #fff;
+  font-size: 0.58rem;
+  line-height: 1;
+}
+
+.menu-toggle {
+  display: none;
+}
+
+.search-panel {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 1px);
+  right: max(1rem, calc((100% - 1300px) / 2));
+  width: min(390px, calc(100vw - 2rem));
+  padding: 0.8rem;
+  display: flex;
+  gap: 0.6rem;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: 0 12px 32px rgb(34 34 34 / 10%);
+}
+
+.search-panel input {
+  min-width: 0;
+  flex: 1;
+  padding: 0.65rem 0.7rem;
+  border: 1px solid var(--line);
+  outline-color: var(--gold);
+  font: inherit;
+  font-size: 0.83rem;
+}
+
+.search-panel button {
+  padding: 0.65rem 1rem;
+  border: 0;
+  background: #222;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  transition: background-color 160ms ease;
+}
+
+.search-panel button:hover {
+  background: var(--gold-dark);
+}
+
+@media (max-width: 1100px) and (min-width: 901px) {
+  .header-main {
+    padding-right: 2.5vw;
+    padding-left: 2.5vw;
+    gap: 0.8rem;
+  }
+
+  .main-nav {
+    gap: clamp(0.55rem, 1vw, 0.85rem);
+  }
+
+  .nav-link {
+    font-size: 0.59rem;
+    letter-spacing: 0.06em;
+  }
+
+  .header-actions {
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .header-main {
+    min-height: 70px;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .brand {
+    gap: 0.45rem;
+  }
+
+  .brand-name {
+    font-size: 1.45rem;
+  }
+
+  .brand-divider {
+    height: 1.35rem;
+  }
+
+  .brand-descriptor {
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+  }
+
+  .header-actions {
+    gap: 0.1rem;
+  }
+
+  .menu-toggle {
+    display: grid;
+  }
+
+  .main-nav {
+    position: absolute;
+    z-index: 2;
+    top: 100%;
+    right: 0;
+    left: 0;
+    padding: 0.5rem 1.25rem 1rem;
+    display: none;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--paper);
+    box-shadow: 0 12px 24px rgb(34 34 34 / 8%);
+  }
+
+  .main-nav.is-open {
+    display: flex;
+  }
+
+  .nav-more-menu {
+    all: unset;
+    display: grid;
+  }
+
+  .nav-link {
+    padding: 0.9rem 0.25rem;
+    border-bottom: 1px solid #f0ede7;
+    font-size: 0.69rem;
+  }
+
+  .search-panel {
+    right: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .icon-button,
+  .search-panel button {
+    transition: none;
+  }
+}

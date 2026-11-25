@@ -1,0 +1,91 @@
+@if (isOpen()) {
+  <section class="help-panel" role="region" aria-labelledby="help-title">
+    <header class="help-header">
+      <div>
+        <span class="help-status" aria-hidden="true"></span>
+        <div>
+          <h2 id="help-title">DIYA AI Help</h2>
+          @if (assistant.isDemoMode) {
+            <span class="mode-label">Local demo · not AI</span>
+          } @else {
+            <span class="mode-label connected">AI via secure service</span>
+          }
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="clear-button" [disabled]="loading()" (click)="clearChat()">Clear</button>
+        <button type="button" class="close-button" aria-label="Close AI Help" (click)="close()">×</button>
+      </div>
+    </header>
+
+    <div class="help-messages" aria-live="polite">
+      @for (message of messages(); track message.id) {
+        <article class="message" [class.user-message]="message.role === 'user'">
+          <span class="message-label">{{ message.role === 'user' ? 'You' : 'DIYA Concierge' }}</span>
+          <p>{{ message.content }}</p>
+          @if (message.products?.length) {
+            <div class="recommendations">
+              @for (product of message.products; track product.id) {
+                <a class="recommendation" [routerLink]="['/products', product.id]" (click)="close()">
+                  <img [src]="product.imageUrl" [alt]="product.name" loading="lazy" />
+                  <span class="recommendation-info">
+                    <strong>{{ product.name }}</strong>
+                    <span>{{ product.category }} · {{ product.price | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+                  </span>
+                  <span class="recommendation-arrow" aria-hidden="true">→</span>
+                </a>
+              }
+            </div>
+          }
+        </article>
+      }
+
+      @if (loading()) {
+        <div class="loading-message" role="status">
+          <span class="typing-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+          Finding a thoughtful match…
+        </div>
+      }
+    </div>
+
+    @if (errorMessage()) {
+      <p class="help-error" role="alert">{{ errorMessage() }}</p>
+    }
+
+    <form class="question-form" [formGroup]="form" (ngSubmit)="submitQuestion()">
+      <label class="sr-only" for="ai-help-question">Ask DIYA AI Help</label>
+      <input
+        id="ai-help-question"
+        formControlName="question"
+        placeholder="Ask about gifts, style, or budget…"
+        autocomplete="off"
+      />
+      <button type="submit" [disabled]="loading() || form.invalid" aria-label="Send question">
+        <span aria-hidden="true">↑</span>
+      </button>
+    </form>
+
+    <footer class="help-footer">
+      @if (assistant.isDemoMode) {
+        Demo suggestions are matched locally from the catalogue.
+      } @else {
+        Messages use the configured secure backend proxy.
+      }
+      <a routerLink="/assistant" (click)="close()">Open full assistant</a>
+    </footer>
+  </section>
+}
+
+<button
+  class="help-launcher"
+  type="button"
+  [attr.aria-expanded]="isOpen()"
+  aria-controls="help-title"
+  (click)="toggle()"
+>
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M20 11.5a7.5 7.5 0 0 1-7.5 7.5H6l-3 2v-5.5A7.5 7.5 0 1 1 20 11.5Z" />
+    <path d="m9 11 2 2 4-4" />
+  </svg>
+  <span>{{ isOpen() ? 'Close help' : 'AI Help' }}</span>
+</button>

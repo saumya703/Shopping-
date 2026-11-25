@@ -1,0 +1,12 @@
+<section class="featured-section" aria-labelledby="featured-title">
+  <div class="featured-heading">
+    <span class="eyebrow">Loved by you</span>
+    <h2 id="featured-title">A few of our favourites</h2>
+    <p>Signature pieces to keep close, and pass down.</p>
+  </div>
+  <div class="featured-grid">
+    @for (product of products(); track product.id) {
+      <app-product-card [product]="product" />
+    }
+  </div>
+</section>

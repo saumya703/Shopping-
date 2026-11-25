@@ -1,0 +1,118 @@
+<section class="cart-page">
+  <div class="page-heading">
+    <span class="eyebrow">Your DIYA edit</span>
+    <h1>Your shopping bag</h1>
+    <p>Thoughtful pieces, chosen just for you.</p>
+  </div>
+
+  @if (cart.lines().length > 0) {
+    <div class="cart-layout">
+      <div class="cart-items">
+        <div class="cart-list-heading">
+          <span>Piece</span>
+          <span>{{ cart.itemCount() }} {{ cart.itemCount() === 1 ? 'item' : 'items' }}</span>
+        </div>
+
+        @for (item of cart.lines(); track item.itemKey) {
+          <article class="cart-item">
+            <a class="cart-item-image" [routerLink]="['/products', item.productId]">
+              <img [src]="item.product.imageUrl" [alt]="item.product.name" />
+            </a>
+            <div class="cart-item-info">
+              <span class="item-category">{{ item.product.category }}</span>
+              <a class="item-name" [routerLink]="['/products', item.productId]">
+                {{ item.product.name }}
+              </a>
+              <span class="item-material">{{ selectionSummary(item) }}</span>
+              <div class="quantity-control" [attr.aria-label]="'Quantity for ' + item.product.name">
+                <button
+                  type="button"
+                  [disabled]="item.quantity <= 1"
+                  [attr.aria-label]="'Decrease ' + item.product.name + ' quantity'"
+                  (click)="cart.decreaseQuantity(item.productId, item.selectedOptions ?? {})"
+                >
+                  −
+                </button>
+                <span aria-live="polite">{{ item.quantity }}</span>
+                <button
+                  type="button"
+                  [disabled]="cart.quantityFor(item.productId) >= item.product.availableQuantity"
+                  [attr.aria-label]="'Increase ' + item.product.name + ' quantity'"
+                  (click)="cart.increaseQuantity(item.productId, item.selectedOptions ?? {})"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <div class="cart-item-end">
+              <span class="unit-price"
+                >{{ item.unitPrice | currency: 'USD' : 'symbol' : '1.0-0' }} each</span
+              >
+              <span class="line-total">{{
+                item.lineTotal | currency: 'USD' : 'symbol' : '1.0-0'
+              }}</span>
+              <div class="cart-item-actions">
+                <button
+                  class="move-to-wishlist-button"
+                  type="button"
+                  [attr.aria-label]="'Move ' + item.product.name + ' to wishlist'"
+                  (click)="moveToWishlist(item)"
+                >
+                  Move to wishlist
+                </button>
+                <button
+                  class="remove-button"
+                  type="button"
+                  [attr.aria-label]="'Remove ' + item.product.name + ' from cart'"
+                  (click)="cart.remove(item.productId, item.selectedOptions ?? {})"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </article>
+        }
+
+        <button class="clear-cart" type="button" (click)="cart.clear()">Clear shopping bag</button>
+      </div>
+
+      <aside class="order-summary" aria-labelledby="summary-title">
+        <h2 id="summary-title">Order summary</h2>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>{{ cart.subtotal() | currency: 'USD' : 'symbol' : '1.0-0' }}</span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span>
+            @if (cart.shipping() === 0) {
+              Complimentary
+            } @else {
+              {{ cart.shipping() | currency: 'USD' : 'symbol' : '1.0-0' }}
+            }
+          </span>
+        </div>
+        <p class="shipping-note">
+          @if (cart.subtotal() > 250) {
+            Your order qualifies for complimentary shipping.
+          } @else {
+            Complimentary shipping on orders over $250.
+          }
+        </p>
+        <div class="summary-total">
+          <span>Total</span>
+          <strong>{{ cart.total() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+        </div>
+        <a class="checkout-button" routerLink="/checkout">Continue to checkout</a>
+        <a class="continue-link" routerLink="/" fragment="collection">Continue shopping</a>
+      </aside>
+    </div>
+  } @else {
+    <div class="empty-cart">
+      <span class="empty-mark" aria-hidden="true">O</span>
+      <h2>Your bag is waiting for something lovely</h2>
+      <p>Explore the collection and find a piece to treasure.</p>
+      <a routerLink="/" fragment="collection">Continue shopping</a>
+    </div>
+  }
+</section>

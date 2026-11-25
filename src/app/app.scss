@@ -1,0 +1,63 @@
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+main {
+  min-height: calc(100vh - 11.5rem);
+}
+
+.site-footer {
+  padding: 2rem 5.5vw;
+  border-top: 1px solid #eeeae2;
+  background: var(--cream);
+  color: #77736c;
+  font-size: 0.76rem;
+}
+
+.footer-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.footer-brand {
+  text-decoration: none;
+}
+
+.footer-brand .brand-mark {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1rem;
+}
+
+.footer-brand .brand-name {
+  font-size: 0.82rem;
+}
+
+.footer-brand .brand-name span {
+  font-size: 0.55rem;
+}
+
+.footer-inner p {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-style: italic;
+}
+
+@media (max-width: 640px) {
+  .footer-inner {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .footer-inner p {
+    order: 1;
+    width: 100%;
+  }
+}

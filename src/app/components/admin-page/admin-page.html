@@ -1,0 +1,137 @@
+<section class="admin-page">
+  <header class="admin-heading">
+    <div>
+      <span class="eyebrow">DIYA · Demo workspace</span>
+      <h1>Admin dashboard</h1>
+      <p>Changes are stored in this browser only. This interface is not secured by server-side roles.</p>
+    </div>
+    <button class="exit-button" type="button" (click)="logout()">Exit admin demo</button>
+  </header>
+
+  <nav class="admin-nav" aria-label="Admin sections">
+    <button type="button" [class.active]="section() === 'overview'" (click)="selectSection('overview')">Overview</button>
+    <button type="button" [class.active]="section() === 'products'" (click)="selectSection('products')">Products</button>
+    <button type="button" [class.active]="section() === 'categories'" (click)="selectSection('categories')">Categories</button>
+    <button type="button" [class.active]="section() === 'customers'" (click)="selectSection('customers')">Customers</button>
+    <button type="button" [class.active]="section() === 'orders'" (click)="selectSection('orders')">Orders</button>
+  </nav>
+
+  @if (message()) {
+    <p class="feedback success" role="status">{{ message() }}</p>
+  }
+  @if (error()) {
+    <p class="feedback error" role="alert">{{ error() }}</p>
+  }
+
+  @switch (section()) {
+    @case ('overview') {
+      <div class="stats-grid">
+        <article class="stat-card"><span>Catalogue pieces</span><strong>{{ products().length }}</strong></article>
+        <article class="stat-card"><span>Demo customers</span><strong>{{ customers().length }}</strong></article>
+        <article class="stat-card"><span>Demo orders</span><strong>{{ orders().length }}</strong></article>
+        <article class="stat-card"><span>Demo order value (excluding cancelled)</span><strong>{{ demoRevenue() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong></article>
+      </div>
+      <p class="demo-note">Statistics are calculated from local demo data and do not represent real sales.</p>
+    }
+    @case ('products') {
+      <div class="admin-grid">
+        <section class="admin-card">
+          <div class="section-title">
+            <h2>{{ editingProductId() ? 'Edit product' : 'Add product' }}</h2>
+            @if (editingProductId()) {
+              <button class="text-button" type="button" (click)="resetProductForm()">Clear form</button>
+            }
+          </div>
+          <form [formGroup]="productForm" (ngSubmit)="saveProduct()" novalidate>
+            <div class="form-grid">
+              <label>Product ID<input formControlName="id" placeholder="e.g. diya-gold-ring" [readonly]="editingProductId() !== null" /></label>
+              <label>Name<input formControlName="name" /></label>
+              <label>Category
+                <select formControlName="category">
+                  @for (category of categories(); track category) { <option [value]="category">{{ category }}</option> }
+                </select>
+              </label>
+              <label>Price (USD)<input type="number" min="0" step="1" formControlName="price" /></label>
+              <label>Available quantity<input type="number" min="0" step="1" formControlName="availableQuantity" /></label>
+              <label class="wide">Image URL<input type="url" formControlName="imageUrl" /></label>
+              <label class="wide">Material<input formControlName="material" /></label>
+              <label class="wide">Description<textarea rows="3" formControlName="description"></textarea></label>
+              <label class="featured-toggle wide">
+                <input type="checkbox" formControlName="featured" />
+                Show in “A few of our favourites” on the homepage
+              </label>
+            </div>
+            <button class="primary-button" type="submit">{{ editingProductId() ? 'Save changes' : 'Add product' }}</button>
+          </form>
+        </section>
+        <section class="admin-card">
+          <h2>Catalogue</h2>
+          <div class="record-list">
+            @for (product of products(); track product.id) {
+              <article class="record-row">
+                <img [src]="product.imageUrl" [alt]="product.name" />
+                <div><strong>{{ product.name }}</strong><span>{{ product.category }} · {{ product.price | currency: 'USD' : 'symbol' : '1.0-0' }}</span></div>
+                <button class="text-button" type="button" (click)="editProduct(product)">Edit</button>
+                <button class="danger-button" type="button" (click)="removeProduct(product.id)">Delete</button>
+              </article>
+            }
+          </div>
+        </section>
+      </div>
+    }
+    @case ('categories') {
+      <section class="admin-card category-panel">
+        <h2>Category management</h2>
+        <form class="category-form" [formGroup]="categoryForm" (ngSubmit)="addCategory()">
+          <label class="sr-only" for="new-category">New category name</label>
+          <input id="new-category" formControlName="name" placeholder="New category name" />
+          <button class="primary-button" type="submit">Add category</button>
+        </form>
+        <div class="category-list">
+          @for (category of categories(); track category) {
+            <div class="category-row">
+              <span>{{ category }}</span>
+              <button class="danger-button" type="button" (click)="removeCategory(category)">Remove</button>
+            </div>
+          }
+        </div>
+      </section>
+    }
+    @case ('customers') {
+      <section class="admin-card">
+        <h2>Demo customer list</h2>
+        @if (customers().length) {
+          <div class="record-list">
+            @for (customer of customers(); track customer.id) {
+              <article class="customer-row"><strong>{{ customer.fullName }}</strong><span>{{ customer.email }}</span><span>{{ customer.phone || 'No phone saved' }}</span></article>
+            }
+          </div>
+        } @else {
+          <p class="demo-note">Customer profiles created in this browser demo will appear here. Passwords are never stored.</p>
+        }
+      </section>
+    }
+    @case ('orders') {
+      <section class="admin-card">
+        <h2>Order management · demo only</h2>
+        @if (orders().length) {
+          <div class="record-list">
+            @for (order of orders(); track order.id) {
+              <article class="admin-order-row">
+                <div><strong>{{ order.id }}</strong><span>{{ order.customer.fullName }} · {{ order.createdAt | date: 'mediumDate' }}</span></div>
+                <strong>{{ order.total | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+                <label>Status
+                  <select [value]="order.status" (change)="updateOrderStatus(order.id, $event)">
+                    @for (status of orderStatuses; track status) { <option [value]="status">{{ status }}</option> }
+                  </select>
+                </label>
+              </article>
+            }
+          </div>
+        } @else {
+          <p class="demo-note">Orders placed through demo checkout will appear here.</p>
+        }
+      </section>
+    }
+  }
+</section>

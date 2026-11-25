@@ -1,0 +1,262 @@
+@if (product(); as item) {
+  <main class="product-detail-page">
+    <nav class="breadcrumbs" aria-label="Breadcrumb">
+      <a routerLink="/" fragment="collection">Collection</a>
+      <span aria-hidden="true">/</span>
+      <a routerLink="/" [queryParams]="{ category: item.category }" fragment="collection">
+        {{ item.category }}
+      </a>
+      <span aria-hidden="true">/</span>
+      <span aria-current="page">{{ item.name }}</span>
+    </nav>
+
+    <section class="product-overview" aria-labelledby="product-title">
+      <app-product-gallery [product]="item" />
+
+      <div class="product-copy">
+        <span class="eyebrow">{{ item.category }} · DIYA Collection</span>
+        <h1 id="product-title">{{ item.name }}</h1>
+        <div class="product-rating">
+          @if (displayRating() !== null && displayReviewCount() > 0) {
+            <span class="rating-stars" [attr.aria-label]="displayRating() + ' out of 5 stars'">
+              {{ ratingStars(displayRating()!) }}
+            </span>
+            <span>{{ displayRating() | number: '1.1-1' }}</span>
+            <a href="#product-reviews">
+              {{ displayReviewCount() }} {{ displayReviewCount() === 1 ? 'review' : 'reviews' }}
+            </a>
+          } @else {
+            <a href="#product-reviews">No ratings yet · Be the first to review</a>
+          }
+        </div>
+
+        <div class="product-pricing" aria-label="Product price">
+          <strong>{{ selectedPrice() | currency: 'USD' : 'symbol' : '1.0-0' }}</strong>
+          @if (originalPriceFor(item); as originalPrice) {
+            <del>{{ originalPrice | currency: 'USD' : 'symbol' : '1.0-0' }}</del>
+            @if (discountPercentage() !== null) {
+              <span class="discount-label">{{ discountPercentage() }}% off</span>
+            }
+          }
+        </div>
+        <p class="product-sku">SKU: {{ skuFor(item) }}</p>
+        <p class="product-short-description">{{ item.description }}</p>
+
+        @if (item.customizationOptions?.length) {
+          <section class="customization-options" aria-label="Product customization options">
+            @for (option of item.customizationOptions; track option.id) {
+              <label [for]="'product-option-' + option.id">
+                <span>{{ option.label }}{{ option.required ? ' · Required' : '' }}</span>
+                <select
+                  [id]="'product-option-' + option.id"
+                  [value]="selectedOptionValue(option.id)"
+                  (change)="selectOption(option, $event)"
+                >
+                  @if (!option.required) {
+                    <option value="">No preference</option>
+                  } @else if (!selectedOptionValue(option.id)) {
+                    <option value="" disabled [selected]="!selectedOptionValue(option.id)">
+                      Choose {{ option.label }}
+                    </option>
+                  }
+                  @for (value of option.values; track value.value) {
+                    <option [value]="value.value">
+                      {{ value.value }}
+                      @if (value.priceAdjustment) {
+                        ({{ value.priceAdjustment > 0 ? '+' : ''
+                        }}{{ value.priceAdjustment | currency: 'USD' : 'symbol' : '1.0-0' }})
+                      }
+                    </option>
+                  }
+                </select>
+              </label>
+            }
+          </section>
+        }
+
+        <p
+          class="stock-status"
+          [class.is-unavailable]="remainingQuantity() === 0"
+          aria-live="polite"
+        >
+          @if (remainingQuantity() > 0) {
+            In stock · {{ remainingQuantity() }} available
+          } @else {
+            Currently unavailable
+          }
+        </p>
+
+        <div class="purchase-row">
+          <span>Quantity</span>
+          <div class="quantity-control" aria-label="Select quantity">
+            <button
+              type="button"
+              aria-label="Decrease quantity"
+              [disabled]="quantity() <= 1 || remainingQuantity() === 0"
+              (click)="decreaseQuantity()"
+            >
+              −
+            </button>
+            <span aria-live="polite">{{ quantity() }}</span>
+            <button
+              type="button"
+              aria-label="Increase quantity"
+              [disabled]="quantity() >= remainingQuantity()"
+              (click)="increaseQuantity()"
+            >
+              +
+            </button>
+          </div>
+        </div>
+
+        <div class="purchase-actions">
+          <button
+            class="add-to-bag-button"
+            type="button"
+            [disabled]="!canPurchase()"
+            (click)="addToCart(item)"
+          >
+            {{ remainingQuantity() === 0 ? 'Unavailable' : 'Add to bag' }}
+          </button>
+          <button
+            class="buy-now-button"
+            type="button"
+            [disabled]="!canPurchase()"
+            (click)="buyNow(item)"
+          >
+            Buy now · review your bag
+          </button>
+        </div>
+
+        @if (actionError()) {
+          <p class="action-error" role="alert">{{ actionError() }}</p>
+        }
+
+        <button
+          class="wishlist-button"
+          type="button"
+          [attr.aria-pressed]="wishlist.contains(item.id)"
+          (click)="wishlist.toggle(item.id)"
+        >
+          <span aria-hidden="true">{{ wishlist.contains(item.id) ? '♥' : '♡' }}</span>
+          {{ wishlist.contains(item.id) ? 'Saved to your wishlist' : 'Add to your wishlist' }}
+        </button>
+
+        <form class="delivery-check" (ngSubmit)="checkDelivery()" novalidate>
+          <label for="delivery-zip">Check delivery information</label>
+          <div class="delivery-input-row">
+            <input
+              id="delivery-zip"
+              type="text"
+              inputmode="numeric"
+              autocomplete="postal-code"
+              maxlength="10"
+              placeholder="ZIP code"
+              [formControl]="deliveryZip"
+              [attr.aria-invalid]="deliveryZip.touched && deliveryZip.invalid"
+              aria-describedby="delivery-message"
+            />
+            <button type="submit">Check</button>
+          </div>
+          <p class="delivery-hint" id="delivery-message" aria-live="polite">
+            @if (deliveryZip.touched && deliveryZip.invalid) {
+              Enter a valid US ZIP code.
+            } @else if (deliveryMessage()) {
+              {{ deliveryMessage() }}
+            } @else {
+              Delivery availability is confirmed at checkout.
+            }
+          </p>
+        </form>
+
+        <p class="bag-note">
+          Buy now adds this piece to your bag; payment is not processed on this demo site.
+        </p>
+      </div>
+    </section>
+
+    <section class="product-accordions" aria-label="Product information">
+      <details open>
+        <summary>Product description</summary>
+        <p>{{ item.description }}</p>
+      </details>
+      <details>
+        <summary>Product specifications</summary>
+        <dl>
+          @for (specification of specifications(); track specification.label) {
+            <div>
+              <dt>{{ specification.label }}</dt>
+              <dd>{{ specification.value }}</dd>
+            </div>
+          }
+          <div>
+            <dt>Material</dt>
+            <dd>{{ item.material }}</dd>
+          </div>
+        </dl>
+      </details>
+      <details>
+        <summary>Metal information</summary>
+        <p>{{ materialInformation(item) }}</p>
+      </details>
+      <details>
+        <summary>Diamond &amp; gemstone details</summary>
+        <p>{{ diamondInformation(item) }}</p>
+      </details>
+      <details>
+        <summary>Shipping &amp; delivery</summary>
+        <p>Standard shipping is $15. Orders over $250 qualify for complimentary shipping.</p>
+        <p>
+          ZIP validation on this page checks formatting only; delivery serviceability is not
+          connected to a live carrier.
+        </p>
+      </details>
+      <details>
+        <summary>Returns &amp; exchanges</summary>
+        <p>{{ returnsInformation(item) }}</p>
+      </details>
+      <details>
+        <summary>Certification</summary>
+        <p>{{ certificationInformation(item) }}</p>
+      </details>
+      <details>
+        <summary>Care instructions</summary>
+        <p>{{ careInformation(item) }}</p>
+      </details>
+    </section>
+
+    <app-product-reviews id="product-reviews" [product]="item" />
+
+    @if (similarProducts().length > 0) {
+      <section class="recommendation-section" aria-labelledby="similar-title">
+        <span class="eyebrow">Considered companions</span>
+        <h2 id="similar-title">Similar designs</h2>
+        <div class="recommendation-grid">
+          @for (relatedProduct of similarProducts(); track relatedProduct.id) {
+            <app-product-card [product]="relatedProduct" />
+          }
+        </div>
+      </section>
+    }
+
+    @if (completeTheLookProducts().length > 0) {
+      <section class="recommendation-section" aria-labelledby="complete-look-title">
+        <span class="eyebrow">Style it your way</span>
+        <h2 id="complete-look-title">Complete the look</h2>
+        <div class="recommendation-grid">
+          @for (relatedProduct of completeTheLookProducts(); track relatedProduct.id) {
+            <app-product-card [product]="relatedProduct" />
+          }
+        </div>
+      </section>
+    }
+
+    <app-recently-viewed />
+  </main>
+} @else {
+  <section class="not-found">
+    <span class="eyebrow">A little detour</span>
+    <h1>We couldn't find that piece.</h1>
+    <a routerLink="/" fragment="collection">Return to the collection</a>
+  </section>
+}
